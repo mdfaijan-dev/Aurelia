@@ -9,155 +9,156 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <script>
   tailwind.config = { theme: { extend: {
-    colors: { charcoal:'#0B0B0C', surface:'#1A1B1E', champagne:'#E5C598', ivory:'#F5F2EB' },
+    colors: { wine:'#722F37', ink:'#3D1218', cream:'#F8F4E7', blush:'#D7A781', champagne:'#D7A781' },
     fontFamily: { serif:['"Cormorant Garamond"','serif'], sans:['Inter','sans-serif'] } } } }
 </script>
 <style>
-  body { background:#0B0B0C; color:#F5F2EB; }
-  .grad-text { background:linear-gradient(90deg,#c9a46f,#E5C598 45%,#F5F2EB 60%,#E5C598); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  body { background:#F8F4E7; color:#3D1218; }
+  .grad-text { background:linear-gradient(90deg,#4a1820,#722F37); -webkit-background-clip:text; background-clip:text; color:transparent; }
   /* Fixed WebGL canvas sits behind all content */
   #bg { position:fixed; inset:0; z-index:0; width:100%; height:100%; }
   main, header, footer { position:relative; z-index:1; }
   /* Frosted glass panel so text stays readable over the 3D scene */
-  .glass { background:rgba(26,27,30,.62); backdrop-filter:blur(14px); border:1px solid rgba(229,197,152,.16); }
+  .glass { background:rgba(215,167,129,.2); backdrop-filter:blur(14px); border:1px solid rgba(215,167,129,.6);}
+  .glass-d { background:rgba(248,244,231,.07); backdrop-filter:blur(14px); border:1px solid rgba(215,167,129,.4); }
   /* 3D tilt cards: JS sets --rx / --ry */
   .tilt { transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transition:transform .15s ease-out; transform-style:preserve-3d; }
-  .tilt:hover { border-color:rgba(229,197,152,.6); box-shadow:0 20px 50px rgba(229,197,152,.10); }
-  .hero-text{text-shadow:0 2px 28px rgba(26,15,36,.95)}
+  .tilt:hover { border-color:rgba(215,167,129,.6); box-shadow:0 20px 50px rgba(114,47,55,.18); }
+  .hero-text{text-shadow:0 2px 24px rgba(248,244,231,.9)}
   .hero-in{opacity:0;transform:translateY(22px);animation:in 1.2s cubic-bezier(.2,.7,.2,1) forwards}
   @keyframes in{to{opacity:1;transform:none}}
   /* subtle film grain */
   body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-  #progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:70;background:linear-gradient(90deg,#b8935a,#E5C598,#F5F2EB)}
-  #glow{position:fixed;top:0;left:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(229,197,152,.07),transparent 65%);transition:transform .25s ease-out}
+  #progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:70;background:linear-gradient(90deg,#722F37,#D7A781)}
+  #glow{position:fixed;top:0;left:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(215,167,129,.4),transparent 65%);transition:transform .25s ease-out}
   .btn{position:relative;overflow:hidden}
   .btn::after{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);transition:left .7s}
   .btn:hover::after{left:140%}
-  .rule{display:flex;align-items:center;justify-content:center;gap:14px;color:#E5C598}
-  .rule::before,.rule::after{content:"";width:48px;height:1px;background:linear-gradient(90deg,transparent,#E5C598)}
+  .rule{display:flex;align-items:center;justify-content:center;gap:14px}
+  .rule::before,.rule::after{content:"";width:48px;height:1px;background:linear-gradient(90deg,transparent,#D7A781)}
   .rule::after{transform:scaleX(-1)}
   .fade { opacity:0; transform:translateY(30px); transition:all .9s ease; }
   .fade.show { opacity:1; transform:none; }
   @media (prefers-reduced-motion:reduce){ .fade{opacity:1;transform:none;transition:none} .tilt{transition:none} }
-  input,select,textarea { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.2); color:#fff; }
+  input,select,textarea { background:rgba(255,255,255,.7); border:1px solid rgba(114,47,55,.5); color:#3D1218; font-size:16px; min-height:48px; }
   select option { color:#141414; }
 </style>
 </head>
-<body class="font-sans text-ivory antialiased">
+<body class="font-sans text-ink antialiased">
 <canvas id="bg" aria-hidden="true"></canvas>
 <div id="progress"></div><div id="glow"></div>
 
 <!-- NAV -->
-<header class="fixed top-0 inset-x-0 z-50 glass border-x-0 border-t-0">
-  <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 h-20" aria-label="Main">
-    <a href="#top" class="font-serif text-2xl tracking-[.3em] uppercase">Aurelia<span class="text-champagne">.</span></a>
+<header class="fixed top-0 inset-x-0 z-50 bg-cream/85 backdrop-blur border-b border-champagne/50">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 h-16 md:h-20" aria-label="Main">
+    <a href="#top" class="font-serif text-2xl tracking-[.3em] uppercase">Aurelia<span class="text-ink">.</span></a>
     <ul class="hidden md:flex gap-10 text-xs tracking-widest uppercase">
-      <li><a class="hover:text-champagne transition" href="#services">Services</a></li>
-      <li><a class="hover:text-champagne transition" href="#portfolio">Portfolio</a></li>
-      <li><a class="hover:text-champagne transition" href="#about">About</a></li>
-      <li><a class="hover:text-champagne transition" href="#testimonials">Testimonials</a></li>
+      <li><a class="hover:opacity-60 transition" href="#services">Services</a></li>
+      <li><a class="hover:opacity-60 transition" href="#portfolio">Portfolio</a></li>
+      <li><a class="hover:opacity-60 transition" href="#about">About</a></li>
+      <li><a class="hover:opacity-60 transition" href="#testimonials">Testimonials</a></li>
     </ul>
-    <a href="#contact" class="hidden md:inline-block btn bg-champagne text-charcoal px-6 py-3 text-xs font-medium tracking-wider uppercase hover:bg-ivory transition">Book Consultation</a>
-    <button id="menuBtn" class="md:hidden text-2xl" aria-label="Toggle menu">☰</button>
+    <a href="#contact" class="hidden md:inline-block btn bg-wine text-cream px-6 py-3 text-xs font-medium tracking-wider uppercase hover:bg-blush transition">Book Consultation</a>
+    <button id="menuBtn" class="md:hidden text-2xl w-11 h-11 flex items-center justify-center text-ink" aria-label="Toggle menu">☰</button>
   </nav>
-  <div id="mobileMenu" class="hidden md:hidden px-6 pb-6 space-y-4 text-sm uppercase tracking-widest">
-    <a class="block" href="#services">Services</a><a class="block" href="#portfolio">Portfolio</a>
-    <a class="block" href="#about">About</a><a class="block" href="#testimonials">Testimonials</a>
-    <a class="block text-champagne" href="#contact">Book Consultation</a>
+  <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 space-y-1 text-sm uppercase tracking-widest">
+    <a class="block py-3" href="#services">Services</a><a class="block py-3" href="#portfolio">Portfolio</a>
+    <a class="block py-3" href="#about">About</a><a class="block py-3" href="#testimonials">Testimonials</a>
+    <a class="block py-3 font-medium" href="#contact">Book Consultation</a>
   </div>
 </header>
 
 <main id="top">
 <!-- HERO -->
-<section class="min-h-screen flex items-end pb-24 md:items-center md:pb-0">
+<section class="min-h-[100svh] flex items-end pb-24 md:items-center md:pb-0">
   <div class="max-w-7xl mx-auto px-6 pt-24 w-full">
-    <p class="hero-in hero-text text-champagne uppercase tracking-[.4em] text-[11px] mb-6">Luxury Event Planning · Est. 2014</p>
+    <p class="hero-in hero-text text-ink uppercase tracking-[.4em] text-xs font-medium mb-6">Luxury Event Planning · Est. 2014</p>
     <h1 class="hero-in hero-text font-serif text-[2.9rem] sm:text-6xl md:text-8xl leading-[1.05] max-w-3xl" style="animation-delay:.2s">Moments Crafted,<br>Memories <em class="grad-text">Cherished.</em></h1>
-    <p class="hero-in hero-text mt-6 max-w-lg text-base md:text-lg text-ivory/80 font-light" style="animation-delay:.4s">From intimate weddings to grand corporate galas, we design every detail so you can simply be present.</p>
+    <p class="hero-in hero-text mt-6 max-w-lg text-base md:text-lg text-ink font-normal" style="animation-delay:.4s">From intimate weddings to grand corporate galas, we design every detail so you can simply be present.</p>
     <div class="hero-in mt-10 flex flex-col sm:flex-row gap-4 max-w-md" style="animation-delay:.6s">
-      <a href="#contact" class="btn bg-champagne text-charcoal px-8 py-4 text-xs font-medium tracking-wider uppercase text-center hover:bg-ivory transition">Plan Your Event</a>
-      <a href="#portfolio" class="border border-champagne/50 px-8 py-4 text-xs tracking-wider uppercase text-center hover:bg-ivory hover:text-charcoal transition">View Portfolio</a>
+      <a href="#contact" class="btn bg-wine text-cream px-8 py-4 text-xs font-medium tracking-wider uppercase text-center hover:bg-blush transition">Plan Your Event</a>
+      <a href="#portfolio" class="border border-wine/50 px-8 py-4 text-xs tracking-wider uppercase text-center hover:bg-wine hover:text-cream transition">View Portfolio</a>
     </div>
-    <p class="mt-16 text-xs text-ivory/40 tracking-widest uppercase">Scroll to explore ↓</p>
+    <p class="mt-16 text-xs text-ink tracking-widest uppercase">Scroll to explore ↓</p>
   </div>
 </section>
 
 <!-- ABOUT + STATS -->
-<section id="about" class="py-28">
+<section id="about" class="py-16 md:py-28">
   <div class="max-w-4xl mx-auto px-6">
     <div class="glass p-10 md:p-14 fade">
-      <p class="text-champagne uppercase tracking-[.3em] text-xs mb-4">Our Story</p>
+      <p class="text-ink uppercase tracking-[.3em] text-xs mb-4">Our Story</p>
       <h2 class="font-serif text-4xl md:text-5xl mb-6">Where vision meets flawless execution</h2>
-      <p class="text-ivory/70 leading-relaxed mb-10">For over a decade, Aurelia has turned ideas into unforgettable experiences. One dedicated planner, transparent pricing and a trusted network of premium vendors take your event from concept to the last goodbye.</p>
-      <div class="grid grid-cols-3 gap-6 border-t border-white/10 pt-8 text-center">
-        <div><p class="font-serif text-4xl md:text-5xl grad-text">850+</p><p class="text-[11px] uppercase tracking-widest mt-1">Events Planned</p></div>
-        <div><p class="font-serif text-4xl md:text-5xl grad-text">98%</p><p class="text-[11px] uppercase tracking-widest mt-1">Satisfaction</p></div>
-        <div><p class="font-serif text-4xl md:text-5xl grad-text">12</p><p class="text-[11px] uppercase tracking-widest mt-1">Years</p></div>
+      <p class="text-ink leading-relaxed mb-10">For over a decade, Aurelia has turned ideas into unforgettable experiences. One dedicated planner, transparent pricing and a trusted network of premium vendors take your event from concept to the last goodbye.</p>
+      <div class="grid grid-cols-3 gap-6 border-t border-wine/20 pt-8 text-center">
+        <div><p class="font-serif text-4xl md:text-5xl grad-text">850+</p><p class="text-xs font-medium uppercase tracking-widest mt-1">Events Planned</p></div>
+        <div><p class="font-serif text-4xl md:text-5xl grad-text">98%</p><p class="text-xs font-medium uppercase tracking-widest mt-1">Satisfaction</p></div>
+        <div><p class="font-serif text-4xl md:text-5xl grad-text">12</p><p class="text-xs font-medium uppercase tracking-widest mt-1">Years</p></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- SERVICES -->
-<section id="services" class="py-28">
+<section id="services" class="py-16 md:py-28">
   <div class="max-w-7xl mx-auto px-6">
-    <p class="rule text-[11px] uppercase tracking-[.4em] mb-4 fade">What We Do</p><h2 class="font-serif text-4xl md:text-6xl text-center mb-16 fade">Our Services</h2>
+    <p class="rule text-xs font-medium uppercase tracking-[.4em] mb-4 fade">What We Do</p><h2 class="font-serif text-4xl md:text-6xl text-center mb-16 fade">Our Services</h2>
     <div class="grid md:grid-cols-3 gap-8">
-      <article class="tilt glass p-10 fade border-t border-t-champagne/50"><div class="w-16 h-16 rounded-full bg-champagne/10 ring-1 ring-champagne/30 flex items-center justify-center text-3xl mb-5" aria-hidden="true"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#E5C598" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="14" r="5"/><circle cx="15" cy="14" r="5"/><path d="M12 3l2 3-2 2-2-2z"/></svg></div><h3 class="font-serif text-2xl mb-3">Luxury Weddings</h3><p class="text-sm text-ivory/65 leading-relaxed mb-6">Full-service and micro-wedding packages: décor, catering, entertainment and guest experience.</p><a href="#contact" class="text-champagne text-xs uppercase tracking-widest">Enquire →</a></article>
-      <article class="tilt glass p-10 fade border-t border-t-champagne/50"><div class="w-16 h-16 rounded-full bg-champagne/10 ring-1 ring-champagne/30 flex items-center justify-center text-3xl mb-5" aria-hidden="true"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#E5C598" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h9v17M14 9h5v12M3 21h18M8 8h3M8 12h3M8 16h3"/></svg></div><h3 class="font-serif text-2xl mb-3">Corporate Events</h3><p class="text-sm text-ivory/65 leading-relaxed mb-6">Galas, conferences, product launches and brand activations that reflect your standards.</p><a href="#contact" class="text-champagne text-xs uppercase tracking-widest">Enquire →</a></article>
-      <article class="tilt glass p-10 fade border-t border-t-champagne/50"><div class="w-16 h-16 rounded-full bg-champagne/10 ring-1 ring-champagne/30 flex items-center justify-center text-3xl mb-5" aria-hidden="true"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#E5C598" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l-1 7a3 3 0 01-6 0zM12 13v7M8 21h8"/></svg></div><h3 class="font-serif text-2xl mb-3">Private Celebrations</h3><p class="text-sm text-ivory/65 leading-relaxed mb-6">Milestone birthdays, anniversaries and intimate soirées, styled with personality.</p><a href="#contact" class="text-champagne text-xs uppercase tracking-widest">Enquire →</a></article>
+      <article class="tilt glass p-7 md:p-10 fade border-t border-t-champagne/50"><div class="w-16 h-16 rounded-full bg-champagne/10 ring-1 ring-champagne/30 flex items-center justify-center text-3xl mb-5" aria-hidden="true"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#722F37" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="14" r="5"/><circle cx="15" cy="14" r="5"/><path d="M12 3l2 3-2 2-2-2z"/></svg></div><h3 class="font-serif text-2xl mb-3">Luxury Weddings</h3><p class="text-base text-ink leading-relaxed mb-6">Full-service and micro-wedding packages: décor, catering, entertainment and guest experience.</p><a href="#contact" class="text-ink text-xs uppercase tracking-widest">Enquire →</a></article>
+      <article class="tilt glass p-7 md:p-10 fade border-t border-t-champagne/50"><div class="w-16 h-16 rounded-full bg-champagne/10 ring-1 ring-champagne/30 flex items-center justify-center text-3xl mb-5" aria-hidden="true"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#722F37" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h9v17M14 9h5v12M3 21h18M8 8h3M8 12h3M8 16h3"/></svg></div><h3 class="font-serif text-2xl mb-3">Corporate Events</h3><p class="text-base text-ink leading-relaxed mb-6">Galas, conferences, product launches and brand activations that reflect your standards.</p><a href="#contact" class="text-ink text-xs uppercase tracking-widest">Enquire →</a></article>
+      <article class="tilt glass p-7 md:p-10 fade border-t border-t-champagne/50"><div class="w-16 h-16 rounded-full bg-champagne/10 ring-1 ring-champagne/30 flex items-center justify-center text-3xl mb-5" aria-hidden="true"><svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#722F37" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l-1 7a3 3 0 01-6 0zM12 13v7M8 21h8"/></svg></div><h3 class="font-serif text-2xl mb-3">Private Celebrations</h3><p class="text-base text-ink leading-relaxed mb-6">Milestone birthdays, anniversaries and intimate soirées, styled with personality.</p><a href="#contact" class="text-ink text-xs uppercase tracking-widest">Enquire →</a></article>
     </div>
   </div>
 </section>
 
 <!-- PORTFOLIO -->
-<section id="portfolio" class="py-28">
+<section id="portfolio" class="py-16 md:py-28">
   <div class="max-w-7xl mx-auto px-6">
-    <p class="rule text-[11px] uppercase tracking-[.4em] mb-4 fade">Selected Work</p><h2 class="font-serif text-4xl md:text-6xl text-center mb-10 fade">Our Portfolio</h2>
-    <div class="flex flex-wrap justify-center gap-3 mb-12 text-xs uppercase tracking-widest">
-      <button data-f="all" class="filter px-5 py-2 border border-champagne btn bg-champagne text-charcoal">All</button>
-      <button data-f="wedding" class="filter px-5 py-2 border border-white/30">Weddings</button>
-      <button data-f="corporate" class="filter px-5 py-2 border border-white/30">Corporate</button>
-      <button data-f="private" class="filter px-5 py-2 border border-white/30">Private</button>
+    <p class="rule text-xs font-medium uppercase tracking-[.4em] mb-4 fade">Selected Work</p><h2 class="font-serif text-4xl md:text-6xl text-center mb-10 fade">Our Portfolio</h2>
+    <div class="flex gap-3 overflow-x-auto -mx-6 px-6 pb-2 mb-8 md:mb-12 md:flex-wrap md:justify-center md:mx-0 md:px-0 text-xs uppercase tracking-widest whitespace-nowrap">
+      <button data-f="all" class="filter shrink-0 px-5 py-3 border border-champagne btn bg-wine text-cream">All</button>
+      <button data-f="wedding" class="filter shrink-0 px-5 py-3 border border-wine/30">Weddings</button>
+      <button data-f="corporate" class="filter shrink-0 px-5 py-3 border border-wine/30">Corporate</button>
+      <button data-f="private" class="filter shrink-0 px-5 py-3 border border-wine/30">Private</button>
     </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <figure data-c="wedding" class="item tilt glass overflow-hidden aspect-[4/3] relative group"><img loading="lazy" alt="Garden wedding ceremony" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 font-serif text-xl">Garden Wedding</figcaption></figure>
-      <figure data-c="corporate" class="item tilt glass overflow-hidden aspect-[4/3] relative group"><img loading="lazy" alt="Corporate gala dinner" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 font-serif text-xl">Annual Gala</figcaption></figure>
-      <figure data-c="private" class="item tilt glass overflow-hidden aspect-[4/3] relative group"><img loading="lazy" alt="Private celebration" src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 font-serif text-xl">Milestone Birthday</figcaption></figure>
-      <figure data-c="wedding" class="item tilt glass overflow-hidden aspect-[4/3] relative group"><img loading="lazy" alt="Luxury table setting" src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 font-serif text-xl">Reception Styling</figcaption></figure>
-      <figure data-c="corporate" class="item tilt glass overflow-hidden aspect-[4/3] relative group"><img loading="lazy" alt="Brand launch stage" src="https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 font-serif text-xl">Brand Launch</figcaption></figure>
-      <figure data-c="wedding" class="item tilt glass overflow-hidden aspect-[4/3] relative group"><img loading="lazy" alt="Styled event decor" src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 font-serif text-xl">Floral Décor</figcaption></figure>
+    <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory -mx-6 px-6 pb-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-6 sm:overflow-visible">
+      <figure data-c="wedding" class="item shrink-0 w-[82%] snap-center sm:w-auto tilt glass overflow-hidden aspect-[4/5] sm:aspect-[4/3] relative group"><img loading="lazy" alt="Garden wedding ceremony" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-wine/90 text-cream font-serif text-xl">Garden Wedding</figcaption></figure>
+      <figure data-c="corporate" class="item shrink-0 w-[82%] snap-center sm:w-auto tilt glass overflow-hidden aspect-[4/5] sm:aspect-[4/3] relative group"><img loading="lazy" alt="Corporate gala dinner" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-wine/90 text-cream font-serif text-xl">Annual Gala</figcaption></figure>
+      <figure data-c="private" class="item shrink-0 w-[82%] snap-center sm:w-auto tilt glass overflow-hidden aspect-[4/5] sm:aspect-[4/3] relative group"><img loading="lazy" alt="Private celebration" src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-wine/90 text-cream font-serif text-xl">Milestone Birthday</figcaption></figure>
+      <figure data-c="wedding" class="item shrink-0 w-[82%] snap-center sm:w-auto tilt glass overflow-hidden aspect-[4/5] sm:aspect-[4/3] relative group"><img loading="lazy" alt="Luxury table setting" src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-wine/90 text-cream font-serif text-xl">Reception Styling</figcaption></figure>
+      <figure data-c="corporate" class="item shrink-0 w-[82%] snap-center sm:w-auto tilt glass overflow-hidden aspect-[4/5] sm:aspect-[4/3] relative group"><img loading="lazy" alt="Brand launch stage" src="https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-wine/90 text-cream font-serif text-xl">Brand Launch</figcaption></figure>
+      <figure data-c="wedding" class="item shrink-0 w-[82%] snap-center sm:w-auto tilt glass overflow-hidden aspect-[4/5] sm:aspect-[4/3] relative group"><img loading="lazy" alt="Styled event decor" src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-700"><figcaption class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-wine/90 text-cream font-serif text-xl">Floral Décor</figcaption></figure>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section id="testimonials" class="py-28">
+<section id="testimonials" class="py-16 md:py-28 bg-wine text-cream">
   <div class="max-w-7xl mx-auto px-6">
-    <p class="rule text-[11px] uppercase tracking-[.4em] mb-4 fade">Kind Words</p><h2 class="font-serif text-4xl md:text-6xl text-center mb-16 fade">Loved by Our Clients</h2>
+    <p class="rule text-xs font-medium uppercase tracking-[.4em] mb-4 fade">Kind Words</p><h2 class="font-serif text-4xl md:text-6xl text-center mb-16 fade">Loved by Our Clients</h2>
     <div class="grid md:grid-cols-3 gap-8">
-      <blockquote class="tilt glass p-8 fade border-t border-t-champagne/50"><p class="text-champagne mb-4" aria-label="5 stars">★★★★★</p><p class="font-serif text-xl leading-snug mb-6">"Every detail was perfect. We enjoyed our own wedding without a single worry."</p><footer class="text-sm text-ivory/50">Ananya &amp; Rohan, Wedding</footer></blockquote>
-      <blockquote class="tilt glass p-8 fade border-t border-t-champagne/50"><p class="text-champagne mb-4" aria-label="5 stars">★★★★★</p><p class="font-serif text-xl leading-snug mb-6">"Our annual gala ran flawlessly. Professional, creative and always on time."</p><footer class="text-sm text-ivory/50">Priya Sen, Corporate Client</footer></blockquote>
-      <blockquote class="tilt glass p-8 fade border-t border-t-champagne/50"><p class="text-champagne mb-4" aria-label="5 stars">★★★★★</p><p class="font-serif text-xl leading-snug mb-6">"They turned my parents' 50th anniversary into something truly magical."</p><footer class="text-sm text-ivory/50">Arjun M., Private Celebration</footer></blockquote>
+      <blockquote class="tilt glass-d p-8 fade border-t border-t-champagne/50"><p class="text-blush mb-4" aria-label="5 stars">★★★★★</p><p class="font-serif text-xl leading-snug mb-6">"Every detail was perfect. We enjoyed our own wedding without a single worry."</p><footer class="text-sm text-cream">Ananya &amp; Rohan, Wedding</footer></blockquote>
+      <blockquote class="tilt glass-d p-8 fade border-t border-t-champagne/50"><p class="text-blush mb-4" aria-label="5 stars">★★★★★</p><p class="font-serif text-xl leading-snug mb-6">"Our annual gala ran flawlessly. Professional, creative and always on time."</p><footer class="text-sm text-cream">Priya Sen, Corporate Client</footer></blockquote>
+      <blockquote class="tilt glass-d p-8 fade border-t border-t-champagne/50"><p class="text-blush mb-4" aria-label="5 stars">★★★★★</p><p class="font-serif text-xl leading-snug mb-6">"They turned my parents' 50th anniversary into something truly magical."</p><footer class="text-sm text-cream">Arjun M., Private Celebration</footer></blockquote>
     </div>
-    <div class="mt-14 flex flex-wrap justify-center gap-x-12 gap-y-3 font-serif text-xl text-ivory/30 uppercase tracking-widest"><span>Taj Hotels</span><span>Vogue Weddings</span><span>Brand One</span><span>Grand Venue</span></div>
+    <div class="mt-14 flex flex-wrap justify-center gap-x-12 gap-y-3 font-serif text-xl text-cream uppercase tracking-widest"><span>Taj Hotels</span><span>Vogue Weddings</span><span>Brand One</span><span>Grand Venue</span></div>
   </div>
 </section>
 
 <!-- LEAD FORM -->
-<section id="contact" class="py-28">
+<section id="contact" class="py-16 md:py-28">
   <div class="max-w-3xl mx-auto px-6">
     <div class="glass p-8 md:p-12 fade">
       <h2 class="font-serif text-4xl md:text-5xl text-center mb-2">Book Your Free Consultation</h2>
-      <p class="text-center text-ivory/60 mb-10">We'll reply within 24 hours.</p>
+      <p class="text-center text-ink mb-10">We'll reply within 24 hours.</p>
       <!-- Connect to a backend (Formspree, Netlify Forms…) to receive leads -->
       <form id="leadForm" class="grid sm:grid-cols-2 gap-6" novalidate>
         <div><label for="name" class="block text-xs uppercase tracking-widest mb-2">Full Name *</label><input id="name" required autocomplete="name" class="w-full px-4 py-3 focus:outline-none focus:border-champagne"></div>
         <div><label for="email" class="block text-xs uppercase tracking-widest mb-2">Email *</label><input id="email" type="email" required autocomplete="email" class="w-full px-4 py-3 focus:outline-none focus:border-champagne"></div>
         <div><label for="type" class="block text-xs uppercase tracking-widest mb-2">Event Type *</label><select id="type" required class="w-full px-4 py-3"><option value="">Select…</option><option>Wedding</option><option>Corporate Event</option><option>Private Celebration</option><option>Brand Activation</option></select></div>
         <div><label for="budget" class="block text-xs uppercase tracking-widest mb-2">Estimated Budget</label><select id="budget" class="w-full px-4 py-3"><option value="">Select…</option><option>Under ₹5 Lakh</option><option>₹5 – 15 Lakh</option><option>₹15 – 40 Lakh</option><option>₹40 Lakh+</option></select></div>
-        <div class="sm:col-span-2"><label for="date" class="block text-xs uppercase tracking-widest mb-2">Preferred Date</label><input id="date" type="date" class="w-full px-4 py-3 [color-scheme:dark]"></div>
-        <button class="sm:col-span-2 btn bg-champagne text-charcoal py-4 uppercase tracking-widest text-sm font-medium hover:bg-ivory transition">Request My Quote</button>
+        <div class="sm:col-span-2"><label for="date" class="block text-xs uppercase tracking-widest mb-2">Preferred Date</label><input id="date" type="date" class="w-full px-4 py-3"></div>
+        <button class="sm:col-span-2 btn bg-wine text-cream py-4 uppercase tracking-widest text-sm font-medium hover:bg-blush transition">Request My Quote</button>
         <p id="formMsg" class="sm:col-span-2 text-center text-sm" role="status"></p>
       </form>
     </div>
@@ -165,15 +166,17 @@
 </section>
 </main>
 
-<footer class="glass border-x-0 border-b-0 py-12 text-ivory/60">
+<footer class="bg-wine text-cream pt-12 pb-28 md:pb-12">
   <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-8 text-sm">
-    <div><p class="font-serif text-3xl text-ivory mb-2">Aurelia<span class="text-champagne">.</span></p><p>Luxury event planning.</p></div>
-    <div class="space-y-2"><a class="block hover:text-champagne" href="#services">Services</a><a class="block hover:text-champagne" href="#portfolio">Portfolio</a><a class="block hover:text-champagne" href="#contact">Contact</a></div>
-    <div class="space-y-2"><a class="block hover:text-champagne" href="#">Instagram</a><a class="block hover:text-champagne" href="#">Facebook</a><a class="block hover:text-champagne" href="#">LinkedIn</a></div>
-    <form onsubmit="event.preventDefault();this.reset();this.querySelector('input').placeholder='Thank you!'" class="flex"><label for="nl" class="sr-only">Newsletter email</label><input id="nl" type="email" required placeholder="Newsletter email" class="w-full px-3 py-2 text-sm"><button class="btn bg-champagne text-charcoal px-4" aria-label="Subscribe">→</button></form>
+    <div><p class="font-serif text-3xl text-cream mb-2">Aurelia<span class="text-blush">.</span></p><p>Luxury event planning.</p></div>
+    <div class="space-y-2"><a class="block hover:text-blush" href="#services">Services</a><a class="block hover:text-blush" href="#portfolio">Portfolio</a><a class="block hover:text-blush" href="#contact">Contact</a></div>
+    <div class="space-y-2"><a class="block hover:text-blush" href="#">Instagram</a><a class="block hover:text-blush" href="#">Facebook</a><a class="block hover:text-blush" href="#">LinkedIn</a></div>
+    <form onsubmit="event.preventDefault();this.reset();this.querySelector('input').placeholder='Thank you!'" class="flex"><label for="nl" class="sr-only">Newsletter email</label><input id="nl" type="email" required placeholder="Newsletter email" class="w-full px-3 py-2 text-sm"><button class="bg-blush text-ink px-4" aria-label="Subscribe">→</button></form>
   </div>
   <p class="text-center text-xs mt-10">© <span id="yr"></span> Aurelia Events</p>
 </footer>
+
+<a href="#contact" id="stickyCta" class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-wine text-cream text-center pt-4 text-sm uppercase tracking-[.2em] font-medium translate-y-full transition-transform duration-300" style="padding-bottom:calc(1rem + env(safe-area-inset-bottom))">Book Consultation</a>
 
 <script>
 /* ===== 3D SCENE =====
@@ -182,21 +185,21 @@
   const canvas = document.getElementById('bg');
   let renderer;
   try { renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true }); } catch (e) { return; } // no WebGL: page still works
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 768 ? 1.5 : 2));
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x0B0B0C, 0.035);
+  scene.fog = new THREE.FogExp2(0xF8F4E7, 0.03);
   const cam = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
   cam.position.z = 10;
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-  const key = new THREE.PointLight(0xffe6c4, 2.2, 40); key.position.set(4, 4, 8); scene.add(key);
-  const rim = new THREE.PointLight(0xE5C598, 1.4, 40); rim.position.set(-6, -10, 6); scene.add(rim);
-  const pink = new THREE.PointLight(0xF5F2EB, .9, 40); pink.position.set(5, -20, 6); scene.add(pink);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+  const key = new THREE.PointLight(0xffd9c0, 2.2, 40); key.position.set(4, 4, 8); scene.add(key);
+  const rim = new THREE.PointLight(0xD7A781, 1.4, 40); rim.position.set(-6, -10, 6); scene.add(rim);
+  const pink = new THREE.PointLight(0xF8F4E7, .9, 40); pink.position.set(5, -20, 6); scene.add(pink);
 
   const gold = new THREE.MeshStandardMaterial({ color:0xc9a96e, metalness:.9, roughness:.25, emissive:0x3a2a10 });
   const glow = new THREE.MeshBasicMaterial({ color:0xffe4b0 });
-  // Ring colours: champagne, deep gold, ivory
-  const cols = [0xE5C598,0xcfae7a,0xF5F2EB].map(c => new THREE.MeshStandardMaterial({ color:c, metalness:.8, roughness:.25, emissive:c, emissiveIntensity:.25 }));
+  // Ring colours: dusty pink, burgundy
+  const cols = [0xD7A781,0x722F37,0xD7A781].map(c => new THREE.MeshStandardMaterial({ color:c, metalness:.35, roughness:.4, emissive:c, emissiveIntensity:.15 }));
 
   // Station 1 (hero): chandelier of concentric gold rings with glowing bulbs
   const chand = new THREE.Group(); chand.position.set(3.5, 0, 0);
@@ -209,17 +212,17 @@
       b.position.set(Math.cos(a) * r, -i * 1.1 + .15, Math.sin(a) * r); chand.add(b);
     }
   });
-  chand.add(new THREE.Mesh(new THREE.IcosahedronGeometry(.7, 1), new THREE.MeshStandardMaterial({ color:0xfff1d6, emissive:0xE5C598, emissiveIntensity:.7, wireframe:true })));
+  chand.add(new THREE.Mesh(new THREE.IcosahedronGeometry(.7, 1), new THREE.MeshStandardMaterial({ color:0x722F37, emissive:0x722F37, emissiveIntensity:.3, wireframe:true })));
   scene.add(chand);
 
   // Station 2 (services/portfolio): gold torus knot
-  const knot = new THREE.Mesh(new THREE.TorusKnotGeometry(2, .5, 160, 20), new THREE.MeshStandardMaterial({ color:0xE5C598, metalness:.9, roughness:.3, emissive:0x2a1f0e }));
+  const knot = new THREE.Mesh(new THREE.TorusKnotGeometry(2, .5, 160, 20), new THREE.MeshStandardMaterial({ color:0x722F37, metalness:.3, roughness:.35, emissive:0x2a0d12 }));
   knot.position.set(-4.5, -14, -2); scene.add(knot);
 
   // Station 3 (testimonials/contact): orbiting ring of champagne orbs
   const orbs = new THREE.Group(); orbs.position.set(4, -28, -2);
   for (let i = 0; i < 24; i++) {
-    const a = i / 24 * Math.PI * 2, pal = [0xE5C598,0xcfae7a,0xF5F2EB,0xb8935a,0xE5C598][i % 5], m = new THREE.Mesh(new THREE.SphereGeometry(.35 + (i % 3) * .1, 24, 24), new THREE.MeshStandardMaterial({ color:pal, metalness:.5, roughness:.2, emissive:pal, emissiveIntensity:.3 }));
+    const a = i / 24 * Math.PI * 2, pal = [0xD7A781,0x722F37,0xD7A781,0xb87a5c,0x722F37][i % 5], m = new THREE.Mesh(new THREE.SphereGeometry(.35 + (i % 3) * .1, 24, 24), new THREE.MeshStandardMaterial({ color:pal, metalness:.3, roughness:.35, emissive:pal, emissiveIntensity:.1 }));
     m.position.set(Math.cos(a) * 3.5, Math.sin(a * 3) * .8, Math.sin(a) * 3.5); orbs.add(m);
   }
   scene.add(orbs);
@@ -228,7 +231,7 @@
   const N = 700, pos = new Float32Array(N * 3);
   for (let i = 0; i < N; i++) { pos[i*3] = (Math.random()-.5)*30; pos[i*3+1] = -Math.random()*38 + 5; pos[i*3+2] = (Math.random()-.5)*20 - 3; }
   const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const pc = [0xE5C598,0xF5F2EB,0xcfae7a,0xE5C598].map(h => new THREE.Color(h)), col = new Float32Array(N * 3);
+  const pc = [0xD7A781,0x722F37,0xC48F65,0xD7A781].map(h => new THREE.Color(h)), col = new Float32Array(N * 3);
   for (let i = 0; i < N; i++) { const c = pc[i % 4]; col.set([c.r, c.g, c.b], i * 3); }
   pg.setAttribute('color', new THREE.BufferAttribute(col, 3));
   const sparks = new THREE.Points(pg, new THREE.PointsMaterial({ vertexColors:true, size:.07, transparent:true, opacity:.85 }));
@@ -279,8 +282,8 @@ if (matchMedia('(hover:hover)').matches) document.querySelectorAll('.tilt').forE
 // Portfolio filters
 const fs = document.querySelectorAll('.filter'), items = document.querySelectorAll('.item');
 fs.forEach(b => b.onclick = () => {
-  fs.forEach(x => x.className = 'filter px-5 py-2 border border-white/30');
-  b.className = 'filter px-5 py-2 border border-champagne btn bg-champagne text-charcoal';
+  fs.forEach(x => x.className = 'filter shrink-0 px-5 py-3 border border-wine/30');
+  b.className = 'filter shrink-0 px-5 py-3 border border-champagne btn bg-wine text-cream';
   items.forEach(i => i.style.display = (b.dataset.f === 'all' || i.dataset.c === b.dataset.f) ? '' : 'none');
 });
 
@@ -292,9 +295,14 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
 document.getElementById('date').min = new Date().toISOString().split('T')[0];
 document.getElementById('leadForm').addEventListener('submit', e => {
   e.preventDefault(); const f = e.target, m = document.getElementById('formMsg');
-  if (!f.checkValidity()) { m.textContent = 'Please fill in the required fields.'; m.className = 'sm:col-span-2 text-center text-sm text-red-400'; return; }
-  m.textContent = 'Thank you! We will be in touch within 24 hours.'; m.className = 'sm:col-span-2 text-center text-sm text-green-400'; f.reset();
+  if (!f.checkValidity()) { m.textContent = 'Please fill in the required fields.'; m.className = 'sm:col-span-2 text-center text-sm text-red-700'; return; }
+  m.textContent = 'Thank you! We will be in touch within 24 hours.'; m.className = 'sm:col-span-2 text-center text-sm text-green-700'; f.reset();
 });
+// Sticky mobile CTA: appears after the hero, hides while the form is on screen
+const cta = document.getElementById('stickyCta'); let inForm = false;
+const upd = () => cta.classList.toggle('translate-y-full', scrollY < innerHeight * .6 || inForm);
+new IntersectionObserver(e => { inForm = e[0].isIntersecting; upd(); }).observe(document.getElementById('contact'));
+addEventListener('scroll', upd, { passive:true });
 const bar = document.getElementById('progress'), glowEl = document.getElementById('glow');
 addEventListener('scroll', () => { bar.style.width = scrollY / (document.documentElement.scrollHeight - innerHeight) * 100 + '%'; }, { passive:true });
 if (matchMedia('(hover:hover)').matches) addEventListener('mousemove', e => { glowEl.style.transform = `translate(${e.clientX}px,${e.clientY}px)`; }); else glowEl.style.display = 'none';
